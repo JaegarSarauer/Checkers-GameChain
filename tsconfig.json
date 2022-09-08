@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "allowSyntheticDefaultImports": true,
+        "esModuleInterop": true,
+        "target": "es5",
+        "moduleResolution": "Node",
+        "module": "commonjs",
+        "declaration": true,
+        "outDir": "./lib",
+        "strict": true,
+        "baseUrl": "src"
+    },
+    "include": ["src", "test"],
+    "exclude": ["node_modules", "**/__tests__/*"]
+}
