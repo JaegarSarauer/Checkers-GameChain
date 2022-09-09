@@ -1,9 +1,9 @@
 import { loadImages } from "./app/game/loader/imageLoader";
 import { Board } from "./app/game/objects/board";
 import app from "./app/game/Pixi";
+import Lobby from "./app/lobby/Lobby";
 
-const queueForGameButton = document.createElement('button');
-document.body.appendChild(queueForGameButton);
+const lobby = new Lobby();
 
 loadImages(app.loader, () => {
     //console.info(game);
