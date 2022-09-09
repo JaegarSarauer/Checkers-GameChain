@@ -1,4 +1,4 @@
-import game, { Team } from "app/GameState";
+import game, { Team } from "../GameState";
 import * as PIXI from "pixi.js";
 import app from "../Pixi";
 import Sprite from "./Sprite";

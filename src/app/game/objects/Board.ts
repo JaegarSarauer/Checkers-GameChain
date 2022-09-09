@@ -2,7 +2,7 @@ import app from "../Pixi";
 import * as PIXI from "pixi.js";
 import Sprite from "./Sprite";
 import Piece from "./Piece";
-import { Team } from "app/GameState";
+import { Team } from "../GameState";
 
 export class Board {
   tilesWidth = 8;

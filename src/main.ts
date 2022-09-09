@@ -1,7 +1,6 @@
-//import game from './game/GameState';
-import { loadImages } from './game/loader/imageLoader';
-import { Board } from './game/objects/board';
-import app from './game/Pixi';
+import { loadImages } from "./app/game/loader/imageLoader";
+import { Board } from "./app/game/objects/board";
+import app from "./app/game/Pixi";
 
 const queueForGameButton = document.createElement('button');
 document.body.appendChild(queueForGameButton);

@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 
-const BaseImagePath = "./assets/";
+const BaseImagePath = "./";
 const Images = [
   { name: "bluepawn", url: BaseImagePath + "blue_piece.png" },
   { name: "redpawn", url: BaseImagePath + "red_piece.png" },
