@@ -6,27 +6,38 @@ export default class Lobby {
 
     // UI Elements
     queueForGameButton: JoinLobbyButton | undefined;
-    signWalletButton: SignWalletButton | undefined;
+    signWalletTeamRed: SignWalletButton | undefined;
+    signWalletTeamBlue: SignWalletButton | undefined;
+    queueSizeText: any;
 
     constructor() {
         this.initQueueButton();
-        this.initSignButton();
+        this.initSignButtons();
+    }
+
+    changeQueue(queueChange: number) {
+        this.playerQueue += queueChange;
+        
     }
 
     initQueueButton() {
         this.queueForGameButton = new JoinLobbyButton((button) => {
             if (++this.playerQueue >= 2) {
                 button.toggleVisibility(false);
-                console.info(this.signWalletButton)
-                this.signWalletButton?.toggleVisibility(true);
+                this.signWalletTeamRed?.toggleVisibility(true);
+                this.signWalletTeamBlue?.toggleVisibility(true);
             }
         });
     }
 
-    initSignButton() {
-        this.signWalletButton = new SignWalletButton((button) => {
+    initSignButtons() {
+        this.signWalletTeamRed = new SignWalletButton('Red', (button) => {
             
         });
-        this.signWalletButton.toggleVisibility(false);
+        this.signWalletTeamRed.toggleVisibility(false);
+        this.signWalletTeamBlue = new SignWalletButton('Blue', (button) => {
+            
+        });
+        this.signWalletTeamBlue.toggleVisibility(false);
     }
 }

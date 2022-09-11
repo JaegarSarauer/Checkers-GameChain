@@ -1,16 +1,33 @@
 //import * as PIXI from 'pixi.js';
 import Piece from './objects/Piece';
 import app from './Pixi';
-import { GameInterface } from '@cajarty/gamechain';
+import { GameController, ReceiptItem, Wallet } from '@cajarty/gamechain';
+import GameUI from './GameUI';
+import { Board } from './objects/board';
+import MoveReceiptItem from '../receipt/MoveReceiptItem';
 
 export type Team = 'Red' | 'Blue';
 
-class GameState extends GameInterface {
+export default class GameState {
     currentTurn: Team = 'Red';
     currentSelection: Piece | null;
+
+    redTeamWallet: Wallet | undefined;
+    blueTeamWallet: Wallet | undefined;
+
+    gameUI: GameUI;
+    board: Board;
+
+    gameController: GameController;
+
     constructor() {
-        super();
         this.currentSelection = null;
+        this.gameUI = new GameUI();
+        this.gameUI.setCurrentTurn(this.currentTurn);
+
+        this.board = new Board();
+
+        this.gameController = new GameController(this);
 
         app.ticker.add(() => {
             if (this.currentSelection) {
@@ -20,16 +37,32 @@ class GameState extends GameInterface {
         });
     }
 
-    initialize() {
+    initialize() {}
 
+    update(item: ReceiptItem) {
+        item.execute();
     }
 
-    update() {
+    finalize() {}
 
+    checkWinCondition(): Team | null {
+        let blueWin = true;
+        let redWin = true;
+        this.board.pawns.forEach((pawn: Piece) => {
+            if (pawn.sprite.y > 100) {
+                if (pawn.team == 'Red') {
+                    redWin = false;
+                } else {
+                    blueWin = false;
+                }
+            }
+        });
+        return blueWin ? 'Blue' : redWin ? 'Red' : null;
     }
 
-    finalize() {
-      
+    changeTurn() {
+        this.currentTurn = this.currentTurn == 'Red' ? 'Blue' : 'Red';
+        this.gameUI.setCurrentTurn(this.currentTurn);
     }
 
     selectPiece(piece: Piece) {
@@ -40,11 +73,18 @@ class GameState extends GameInterface {
 
     dropPiece() {
         if (this.currentSelection) {
-            // make move
+            this.gameController.update(
+                new MoveReceiptItem(
+                    this.currentSelection.id,
+                    this.currentSelection.sprite.x,
+                    this.currentSelection.sprite.y
+                )
+            , false);
             this.currentSelection = null;
+            const winner = this.checkWinCondition();
+            if (winner) {
+            }
+            this.changeTurn();
         }
     }
 }
-
-const game = new GameState();
-export default game;

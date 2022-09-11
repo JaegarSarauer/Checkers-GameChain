@@ -2,12 +2,15 @@ import game, { Team } from "../GameState";
 import * as PIXI from "pixi.js";
 import app from "../Pixi";
 import Sprite from "./Sprite";
+import main from "../../../main";
 
 export default class Piece {
+  id: number;
   sprite: Sprite;
   team: Team;
 
-  constructor(team: Team) {
+  constructor(id: number, team: Team) {
+    this.id = id;
     this.team = team;
     this.sprite = Sprite.create(team == "Red" ? "redpawn" : "bluepawn");
 
@@ -19,11 +22,11 @@ export default class Piece {
     this.sprite.cursor = "pointer";
 
     this.sprite.on("pointerdown", () => {
-      game.selectPiece(this);
+      main.game?.selectPiece(this);
     });
 
     this.sprite.on("pointerup", () => {
-      game.dropPiece();
+      main.game?.dropPiece();
     });
   }
 }

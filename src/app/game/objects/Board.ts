@@ -5,11 +5,12 @@ import Piece from "./Piece";
 import { Team } from "../GameState";
 
 export class Board {
+  pawnStartCount = 12;
   tilesWidth = 8;
   tilesHeight = 8;
   tileSizePixelSize = 64;
-  bluePawns: Sprite[] = [];
-  redPawns: Sprite[] = [];
+  pawns: Piece[] = [];
+  pieceIdCounter: number = 0;
 
   constructor() {
     app.renderer.view.width = this.tilesWidth * this.tileSizePixelSize;
@@ -37,18 +38,27 @@ export class Board {
   }
 
   _createPawnTeam(team: Team) {
-    const pawnStartCount = 12;
     const boardWidthPixel = this.tilesWidth * this.tileSizePixelSize;
     const boardHeightPixel = this.tilesWidth * this.tileSizePixelSize;
     const isTopTeam = team == 'Red';
     const offset = isTopTeam ? 1 : 0;
-    for (let i = 0; i < pawnStartCount; ++i) {
-      const pawn = new Piece(team);
+    for (let i = 0; i < this.pawnStartCount; ++i) {
+      const pawn = new Piece(this.pieceIdCounter++, team);
+      this.pawns.push(pawn);
       const distance = ((i * 2) + offset) * this.tileSizePixelSize;
       const row = Math.floor(distance / boardWidthPixel) + (!isTopTeam ? 5 : 0);
       pawn.sprite.x += distance % boardHeightPixel + (row % 2 == offset ? (isTopTeam ? -1 : 1) * this.tileSizePixelSize : 0);
       pawn.sprite.y += row * this.tileSizePixelSize;
       app.stage.addChild(pawn.sprite);
     }
+  }
+
+  getPieceById(id: number) {
+    for (let i = 0; i < this.pawns.length; ++i) {
+      if (this.pawns[i].id == id) {
+        return this.pawns[i];
+      }
+    }
+    return null;
   }
 }

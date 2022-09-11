@@ -2,6 +2,9 @@ import { defineConfig } from 'vite';
 import { NodeGlobalsPolyfillPlugin } from '@esbuild-plugins/node-globals-polyfill'
 // ...
 export default defineConfig({
+    ssr: {
+        noExternal: true,
+    },
     optimizeDeps: {
         esbuildOptions: {
             define: {
@@ -15,6 +18,14 @@ export default defineConfig({
         },
     },
     define: {
-        'process.env': {},
+        'process.env': {}
+    },
+    resolve: {
+      alias: {
+        process: "process/browser",
+        stream: "stream-browserify",
+        zlib: "browserify-zlib",
+        util: 'util'
+      }
     },
 });
