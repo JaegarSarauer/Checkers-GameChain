@@ -1,18 +1,22 @@
-import JoinLobbyButton from "./JoinLobbyButton";
-import SignWalletButton from "./SignWalletButton";
+import main from "../../main";
+import JoinLobbyButton from "./components/JoinLobbyButton";
+import SignWalletButton from "./components/SignWalletButton";
+import ValidateButton from "./components/ValidateButton";
 
-export default class Lobby {
+export default class LobbyUI {
     playerQueue: number = 0;
 
     // UI Elements
     queueForGameButton: JoinLobbyButton | undefined;
     signWalletTeamRed: SignWalletButton | undefined;
     signWalletTeamBlue: SignWalletButton | undefined;
+    replayButton: ValidateButton | undefined;
     queueSizeText: any;
 
     constructor() {
         this.initQueueButton();
         this.initSignButtons();
+        this.initReplayButton();
     }
 
     changeQueue(queueChange: number) {
@@ -39,5 +43,11 @@ export default class Lobby {
             
         });
         this.signWalletTeamBlue.toggleVisibility(false);
+    }
+
+    initReplayButton() {
+        this.replayButton = new ValidateButton((button) => {
+            main.validator.replay();
+        });
     }
 }

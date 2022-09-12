@@ -2,8 +2,8 @@ import Button from './Button';
 import * as ethUtil from 'ethereumjs-util';
 import * as sigUtil from '@metamask/eth-sig-util';
 import { iWeb3, Wallet } from '@cajarty/gamechain';
-import game, { Team } from '../game/GameState';
-import main from '../../main';
+import game, { Team } from '../../game/GameState';
+import main from '../../../main';
 
 export default class SignWalletButton extends Button {
     button: any;

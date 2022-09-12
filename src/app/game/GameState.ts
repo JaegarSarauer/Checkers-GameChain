@@ -1,14 +1,14 @@
 //import * as PIXI from 'pixi.js';
 import Piece from './objects/Piece';
 import app from './Pixi';
-import { GameController, ReceiptItem, Wallet } from '@cajarty/gamechain';
-import GameUI from './GameUI';
+import { GameController, GameInterface, ReceiptItem, Wallet } from '@cajarty/gamechain';
+import GameUI from '../UI/GameUI';
 import { Board } from './objects/board';
 import MoveReceiptItem from '../receipt/MoveReceiptItem';
 
 export type Team = 'Red' | 'Blue';
 
-export default class GameState {
+export default class GameState implements GameInterface {
     currentTurn: Team = 'Red';
     currentSelection: Piece | null;
 
@@ -36,12 +36,11 @@ export default class GameState {
             }
         });
     }
+    update(item: ReceiptItem, result: unknown): void {
+        this.gameUI.setReceiptLogs(this.gameController.receipt);
+    }
 
     initialize() {}
-
-    update(item: ReceiptItem) {
-        item.execute();
-    }
 
     finalize() {}
 
@@ -79,7 +78,7 @@ export default class GameState {
                     this.currentSelection.sprite.x,
                     this.currentSelection.sprite.y
                 )
-            , false);
+            );
             this.currentSelection = null;
             const winner = this.checkWinCondition();
             if (winner) {
