@@ -1,7 +1,8 @@
-import { ReceiptItem } from "@cajarty/gamechain";
+import { ReceiptItem, SignedSignature } from "@cajarty/gamechain";
 import main from "../../main";
 
 export default class MoveReceiptItem implements ReceiptItem {
+    signature: SignedSignature | undefined;
     pieceId: number;
     newX: number;
     newY: number;
@@ -12,7 +13,7 @@ export default class MoveReceiptItem implements ReceiptItem {
     }
 
     execute(): void {
-        const piece = main.game?.board.getPieceById(this.pieceId);
+        const piece = main.game?.board?.getPieceById(this.pieceId);
         if (piece) {
             piece.sprite.x = this.newX;
             piece.sprite.y = this.newY;

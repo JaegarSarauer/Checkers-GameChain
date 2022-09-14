@@ -22,14 +22,13 @@ export default class SignWalletButton extends Button {
     }
 
     async signWalletOwner() {
-        const wallet = new Wallet(iWeb3.createWallet())
+        const wallet = new Wallet(iWeb3.createWallet());
         wallet.assignWalletOwner(iWeb3.metaMask?.currentAccount as string);
-        if (this.team == 'Red') {
-            main.game!.redTeamWallet = wallet;
-        } else {
-            main.game!.blueTeamWallet = wallet;
+        main.actorController?.registerSignedWallet(wallet);
+        if (main.actorController?.canStartGame()) {
+            main.createGame();
         }
-        this.button.innerText = `Team ${this.team} Wallet Signed by ${wallet.ownerPublicKey}`;
+        this.button.innerText = `Team ${this.team} Wallet (${wallet.getAddress()}) Signed by ${wallet.ownerPublicKey}`;
     }
 
     async sendSign() {
@@ -104,7 +103,7 @@ export default class SignWalletButton extends Button {
 
         var from = await window.web3.eth.getAccounts();
 
-        console.info('from', from)
+        console.info('from', from);
 
         var params = [from[0], msgParams];
         var method = 'eth_signTypedData_v4';

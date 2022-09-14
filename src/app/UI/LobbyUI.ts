@@ -47,7 +47,7 @@ export default class LobbyUI {
 
     initReplayButton() {
         this.replayButton = new ValidateButton((button) => {
-            main.validator.replay();
+            main.validatorController?.replay();
         });
     }
 }

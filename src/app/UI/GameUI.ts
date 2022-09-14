@@ -12,6 +12,8 @@ export default class GameUI {
 
         this.receiptLogText = document.createElement('p');
         this.receiptLogText.innerText = '';
+        this.receiptLogText.style.width = '98%';
+        this.receiptLogText.style.wordBreak = 'break-word';
         document.body.appendChild(this.receiptLogText);
     }
 
