@@ -3,6 +3,7 @@ import * as PIXI from "pixi.js";
 import app from "../Pixi";
 import Sprite from "./Sprite";
 import main from "../../../main";
+import GameState from "../GameState";
 
 export default class Piece {
   id: number;
@@ -22,11 +23,15 @@ export default class Piece {
     this.sprite.cursor = "pointer";
 
     this.sprite.on("pointerdown", () => {
-      main.game?.selectPiece(this);
+      // TODO fix access
+      const game = main.playerController?.gameController?.game?.game as GameState;
+      game.selectPiece(this);
     });
 
     this.sprite.on("pointerup", () => {
-      main.game?.dropPiece();
+      // TODO fix access
+      const game = main.playerController?.gameController?.game?.game as GameState;
+      game.dropPiece();
     });
   }
 }

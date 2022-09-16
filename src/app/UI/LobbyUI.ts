@@ -1,3 +1,4 @@
+import { GameController, iWeb3, WriteWallet } from "@cajarty/gamechain";
 import main from "../../main";
 import JoinLobbyButton from "./components/JoinLobbyButton";
 import SignWalletButton from "./components/SignWalletButton";
@@ -19,18 +20,11 @@ export default class LobbyUI {
         this.initReplayButton();
     }
 
-    changeQueue(queueChange: number) {
-        this.playerQueue += queueChange;
-        
-    }
-
     initQueueButton() {
         this.queueForGameButton = new JoinLobbyButton((button) => {
-            if (++this.playerQueue >= 2) {
-                button.toggleVisibility(false);
-                this.signWalletTeamRed?.toggleVisibility(true);
-                this.signWalletTeamBlue?.toggleVisibility(true);
-            }
+            // todo connect with metamask
+            const wallet = new WriteWallet(iWeb3.createWallet())
+            main.playerController?.queueAsSignedActor(wallet);
         });
     }
 
@@ -43,6 +37,11 @@ export default class LobbyUI {
             
         });
         this.signWalletTeamBlue.toggleVisibility(false);
+        main.playerController?.onGameReadyCallbacks.push((gameController: GameController) => {
+            this.queueForGameButton?.toggleVisibility(false);
+            this.signWalletTeamRed?.toggleVisibility(true);
+            this.signWalletTeamBlue?.toggleVisibility(true);
+        })
     }
 
     initReplayButton() {

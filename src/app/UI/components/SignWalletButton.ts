@@ -1,8 +1,8 @@
 import Button from './Button';
 import * as ethUtil from 'ethereumjs-util';
 import * as sigUtil from '@metamask/eth-sig-util';
-import { iWeb3, Wallet } from '@cajarty/gamechain';
-import game, { Team } from '../../game/GameState';
+import { iWeb3 } from '@cajarty/gamechain';
+import { Team } from '../../game/GameState';
 import main from '../../../main';
 
 export default class SignWalletButton extends Button {
@@ -22,13 +22,16 @@ export default class SignWalletButton extends Button {
     }
 
     async signWalletOwner() {
-        const wallet = new Wallet(iWeb3.createWallet());
+        /*
+
+        const wallet = new WriteWallet(iWeb3.createWallet());
         wallet.assignWalletOwner(iWeb3.metaMask?.currentAccount as string);
         main.actorController?.registerSignedWallet(wallet);
         if (main.actorController?.canStartGame()) {
             main.createGame();
         }
-        this.button.innerText = `Team ${this.team} Wallet (${wallet.getAddress()}) Signed by ${wallet.ownerPublicKey}`;
+        */
+        //this.button.innerText = `Team ${this.team} Wallet (${wallet.getAddress()}) Signed by ${wallet.ownerPublicKey}`;
     }
 
     async sendSign() {

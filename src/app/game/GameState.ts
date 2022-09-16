@@ -1,7 +1,14 @@
 //import * as PIXI from 'pixi.js';
 import Piece from './objects/Piece';
 import app from './Pixi';
-import { GameController, GameInterface, IPFSNode, ReceiptItem, Wallet } from '@cajarty/gamechain';
+import {
+    GameController,
+    GameInterface,
+    IPFSNode,
+    ReceiptItem,
+    Wallet,
+    WriteWallet,
+} from '@cajarty/gamechain';
 import GameUI from '../UI/GameUI';
 import { Board } from './objects/board';
 import MoveReceiptItem from '../receipt/MoveReceiptItem';
@@ -15,16 +22,13 @@ export default class GameState implements GameInterface {
     currentTurn: Team = 'Red';
     currentSelection: Piece | null;
 
-    redTeamWallet: Wallet;
-    blueTeamWallet: Wallet;
+    redTeamWallet: Wallet | undefined;
+    blueTeamWallet: Wallet | undefined;
 
     gameUI: GameUI;
     board: Board | undefined;
 
-    constructor(redTeamWallet: Wallet, blueTeamWallet: Wallet) {
-        this.redTeamWallet = redTeamWallet;
-        this.blueTeamWallet = blueTeamWallet;
-
+    constructor() {
         this.currentSelection = null;
         this.gameUI = new GameUI();
         this.gameUI.setCurrentTurn(this.currentTurn);
@@ -37,29 +41,23 @@ export default class GameState implements GameInterface {
         });
     }
 
-    update(item: ReceiptItem, result: unknown): void {
-        // fix access
-        if (main.gameController) this.gameUI.setReceiptLogs(main.gameController.receipt);
+    initialize(wallets: Wallet[]) {
+        this.board = new Board();
+        this.redTeamWallet = wallets[0];
+        this.blueTeamWallet = wallets[1];
     }
 
-    initialize() {
-        this.board = new Board();
-        // TODO this should probably be all wallets?
-        main.gameController?.update(
-            this.redTeamWallet,
-            new AssignTeamsReceiptItem(
-                this.redTeamWallet?.getAddress(),
-                this.blueTeamWallet?.getAddress()
-            )
-        );
+    update(item: ReceiptItem, result: unknown): void {
+        // fix access
+        if (main.playerController?.gameController) this.gameUI.setReceiptLogs(main.playerController?.gameController.receipt);
     }
 
     finalize() {
         const winner = this.checkWinCondition();
-        if (winner) {
-            const wallet = winner == 'Red' ? this.redTeamWallet : this.blueTeamWallet;
-            main.gameController?.update(wallet, new DeclareWinnerReceiptItem(winner));
-            IPFSNode.uploadReceipt(main.gameController!.receipt);
+        const wallet = winner == 'Red' ? this.redTeamWallet : this.blueTeamWallet;
+        if (winner && wallet) {
+            main.playerController?.gameController?.update(wallet, new DeclareWinnerReceiptItem(winner));
+            IPFSNode.uploadReceipt(main.playerController!.gameController!.receipt);
         }
     }
 
@@ -84,16 +82,17 @@ export default class GameState implements GameInterface {
     }
 
     selectPiece(piece: Piece) {
+        console.info(this.currentTurn, this.currentSelection)
         if (this.currentTurn == piece.team && this.currentSelection == null) {
             this.currentSelection = piece;
         }
     }
 
     dropPiece() {
-        if (this.currentSelection) {
-            const wallet =
-                this.currentSelection.team == 'Red' ? this.redTeamWallet : this.blueTeamWallet;
-            main.gameController?.update(
+        const wallet =
+            this.currentSelection?.team == 'Red' ? this.redTeamWallet : this.blueTeamWallet;
+        if (this.currentSelection && wallet) {
+            main.playerController?.gameController?.update(
                 wallet,
                 new MoveReceiptItem(
                     this.currentSelection.id,
