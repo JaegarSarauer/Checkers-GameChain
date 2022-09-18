@@ -46,6 +46,8 @@ export default class LobbyUI {
 
     initReplayButton() {
         this.replayButton = new ValidateButton((button) => {
+            // TODO this is cleanup from gameController.
+            main.validatorController!.receipt.validActors = [];
             main.validatorController?.replay();
         });
     }

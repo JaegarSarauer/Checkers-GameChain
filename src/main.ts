@@ -26,7 +26,7 @@ class Main {
         })
         this.playerController = new PlayerController(this.lobbyController);
         this.playerController.onGameReadyCallbacks.push((gameController: GameController) => {
-            this.validatorController = new ValidatorController(gameController.game, gameController.receipt);
+            this.validatorController = new ValidatorController(gameController.game.game, gameController.receipt);
         })
         const lobby = new LobbyUI();
     }

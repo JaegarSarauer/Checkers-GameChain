@@ -1,5 +1,6 @@
 import { ReceiptItem } from '@cajarty/gamechain';
 import main from '../../main';
+import GameState from '../game/GameState';
 
 export default class MoveReceiptItem implements ReceiptItem {
     type: string = 'MOVE';
@@ -14,16 +15,33 @@ export default class MoveReceiptItem implements ReceiptItem {
     }
 
     execute(): void {
-        const piece = main.game?.board?.getPieceById(this.pieceId);
+        // TODO fix access
+        const game = main.playerController?.gameController?.game?.game as GameState;
+        const piece = game.board?.getPieceById(this.pieceId);
+        // TODO check can move here
         if (piece) {
             piece.sprite.x = this.newX;
             piece.sprite.y = this.newY;
         }
     }
 
-    getBuilder() {
-        return (pieceId: number, newX: number, newY: number) => {
-            return new MoveReceiptItem(pieceId, newX, newY);
+    toSignatureData() {
+        return {
+            pieceId: this.pieceId,
+            newX: this.newX,
+            newY: this.newY,
+            type: this.type,
         };
     }
+
+    fromSignatureData(params: {[param: string]: any}) {
+        const {pieceId, newX, newY} = params;
+        return new MoveReceiptItem(pieceId, newX, newY);
+    }
+
+    // getBuilder(): (params: {[param: string]: any}) => ReceiptItem {
+    //     return ({pieceId, newX, newY}) => {
+    //         return new MoveReceiptItem(pieceId, newX, newY);
+    //     };
+    // }
 }

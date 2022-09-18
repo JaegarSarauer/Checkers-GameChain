@@ -1,24 +1,40 @@
-import { ReceiptItem } from "@cajarty/gamechain";
+import { ReceiptItem, ReadWallet, Wallet } from "@cajarty/gamechain";
 import main from "../../main";
-import { Team } from "../game/GameState";
+import GameState, { Team } from "../game/GameState";
 
 export default class AssignTeamsReceiptItem implements ReceiptItem {
     type: string = 'ASSIGN_TEAMS';
-    teamRedAddress: string;
-    teamBlueAddress: string;
+    teamRed: Wallet;
+    teamBlue: Wallet;
 
-    constructor(teamRedAddress: string, teamBlueAddress: string) {
-        this.teamRedAddress = teamRedAddress;
-        this.teamBlueAddress = teamBlueAddress;
+    constructor(teamRed: Wallet, teamBlue: Wallet) {
+        this.teamRed = teamRed;
+        this.teamBlue = teamBlue;
     }
 
     execute(): void {
-        //const piece = main.game?.
+        // TODO fix access
+        const game = main?.playerController?.gameController?.game.game as GameState;
+        game.redTeamWallet = this.teamRed;
+        game.blueTeamWallet = this.teamBlue;
     }
 
-    getBuilder() {
-        return (teamRedAddress: string, teamBlueAddress: string) => {
-            return new AssignTeamsReceiptItem(teamRedAddress, teamBlueAddress)
-        }
+    toSignatureData() {
+        return {
+            teamRedAddress: this.teamRed,
+            teamBlueAddress: this.teamBlue,
+            type: this.type,
+        };
     }
+
+    fromSignatureData(params: {[param: string]: any}) {
+        const {teamRed, teamBlue} = params;
+        return new AssignTeamsReceiptItem(new ReadWallet(teamRed), new ReadWallet(teamBlue));
+    }
+
+    // getBuilder(): (params: {[param: string]: any}) => ReceiptItem {
+    //     return ({teamRedAddress, teamBlueAddress}) => {
+    //         return new AssignTeamsReceiptItem(teamRedAddress, teamBlueAddress)
+    //     }
+    // }
 }
