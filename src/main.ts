@@ -9,6 +9,8 @@ class Main {
     playerController: PlayerController | null = null;
     lobbyController: LobbyController | null = null;
 
+    lobbyUI: LobbyUI | undefined;
+
     //game: GameState | null = null;
     //gameController: GameController | undefined = undefined;
     validatorController: ValidatorController | null = null;
@@ -28,7 +30,7 @@ class Main {
         this.playerController.onGameReadyCallbacks.push((gameController: GameController) => {
             this.validatorController = new ValidatorController(gameController.game.game, gameController.receipt);
         })
-        const lobby = new LobbyUI();
+        this.lobbyUI = new LobbyUI();
     }
 
     createGame() {

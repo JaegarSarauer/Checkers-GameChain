@@ -2,12 +2,12 @@ import { ReceiptItem, ReadWallet, Wallet } from "@cajarty/gamechain";
 import main from "../../main";
 import GameState, { Team } from "../game/GameState";
 
-export default class AssignTeamsReceiptItem implements ReceiptItem {
-    type: string = 'ASSIGN_TEAMS';
+export default class AssignTeamsReceiptItem extends ReceiptItem {
     teamRed: Wallet;
     teamBlue: Wallet;
 
     constructor(teamRed: Wallet, teamBlue: Wallet) {
+        super('ASSIGN_TEAMS');
         this.teamRed = teamRed;
         this.teamBlue = teamBlue;
     }

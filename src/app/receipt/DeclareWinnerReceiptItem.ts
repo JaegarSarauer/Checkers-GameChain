@@ -2,11 +2,11 @@ import { ReceiptItem } from '@cajarty/gamechain';
 import main from '../../main';
 import { Team } from '../game/GameState';
 
-export default class DeclareWinnerReceiptItem implements ReceiptItem {
-    type: string = 'DECLARE_WINNER';
+export default class DeclareWinnerReceiptItem extends ReceiptItem {
     winningTeam: Team;
 
     constructor(winningTeam: Team) {
+        super('DECLARE_WINNER');
         this.winningTeam = winningTeam;
     }
 

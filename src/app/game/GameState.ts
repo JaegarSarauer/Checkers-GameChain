@@ -3,19 +3,18 @@ import Piece from './objects/Piece';
 import app from './Pixi';
 import {
     Controller,
-    GameController,
     GameInterface,
     IPFSNode,
-    ReadWallet,
     ReceiptItem,
+    SignedSignature,
     Wallet,
-    WriteWallet,
 } from '@cajarty/gamechain';
 import GameUI from '../UI/GameUI';
 import { Board } from './objects/board';
 import MoveReceiptItem from '../receipt/MoveReceiptItem';
 import AssignTeamsReceiptItem from '../receipt/AssignTeamsReceiptItem';
 import DeclareWinnerReceiptItem from '../receipt/DeclareWinnerReceiptItem';
+import main from '../../main';
 
 export type Team = 'Red' | 'Blue';
 
@@ -45,6 +44,10 @@ export default class GameState implements GameInterface {
     }
 
     initialize(controller: Controller) {
+        controller.addReceiptItem(AssignTeamsReceiptItem)
+        controller.addReceiptItem(DeclareWinnerReceiptItem)
+        controller.addReceiptItem(MoveReceiptItem)
+
         this.controller = controller;
         this.board = new Board();
     }
@@ -66,7 +69,7 @@ export default class GameState implements GameInterface {
             }
         }
 
-        this.gameUI.setReceiptLogs(this.controller!.receipt);
+        main.lobbyUI?.setReceiptLogs(this.controller!.receipt.signature as SignedSignature);
     }
 
     finalize() {

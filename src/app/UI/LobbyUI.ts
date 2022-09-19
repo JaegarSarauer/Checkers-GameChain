@@ -1,6 +1,8 @@
-import { GameController, iWeb3, WriteWallet } from "@cajarty/gamechain";
+import { GameController, iWeb3, Receipt, SignedSignature, ValidatorController, WriteWallet } from "@cajarty/gamechain";
 import main from "../../main";
+import GameState from "../game/GameState";
 import JoinLobbyButton from "./components/JoinLobbyButton";
+import LoadReceiptButton from "./components/LoadReceiptButton";
 import SignWalletButton from "./components/SignWalletButton";
 import ValidateButton from "./components/ValidateButton";
 
@@ -13,11 +15,32 @@ export default class LobbyUI {
     signWalletTeamBlue: SignWalletButton | undefined;
     replayButton: ValidateButton | undefined;
     queueSizeText: any;
+    receiptLogText: any;
+    loadReceiptButton: any;
 
     constructor() {
         this.initQueueButton();
         this.initSignButtons();
         this.initReplayButton();
+        this.initReceipt();
+    }
+
+    setReceiptLogs(receipt: SignedSignature) {
+        this.receiptLogText.value = JSON.stringify(receipt);
+    }
+
+    initReceipt() {
+        this.receiptLogText = document.createElement('input');
+        this.receiptLogText.style.width = '98%';
+        this.receiptLogText.style.wordBreak = 'break-word';
+        document.body.appendChild(this.receiptLogText);
+
+        this.loadReceiptButton = new LoadReceiptButton((button: LoadReceiptButton) => {
+            const receipt = new Receipt();
+            receipt.signature = JSON.parse(this.receiptLogText.value) as SignedSignature;
+
+            main.validatorController = new ValidatorController(new GameState(), receipt);
+        })
     }
 
     initQueueButton() {
