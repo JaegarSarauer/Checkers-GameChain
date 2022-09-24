@@ -1,18 +1,17 @@
 import { GameController, iWeb3, Receipt, SignedSignature, ValidatorController, WriteWallet } from "@cajarty/gamechain";
 import main from "../../main";
 import GameState from "../game/GameState";
+import MetamaskWriteWallet from "../game/objects/MetamaskWriteWallet";
 import JoinLobbyButton from "./components/JoinLobbyButton";
 import LoadReceiptButton from "./components/LoadReceiptButton";
-import SignWalletButton from "./components/SignWalletButton";
 import ValidateButton from "./components/ValidateButton";
 
 export default class LobbyUI {
     playerQueue: number = 0;
 
     // UI Elements
-    queueForGameButton: JoinLobbyButton | undefined;
-    signWalletTeamRed: SignWalletButton | undefined;
-    signWalletTeamBlue: SignWalletButton | undefined;
+    queueAsSignedActorButton: JoinLobbyButton | undefined;
+    queueAsOwnerButton: JoinLobbyButton | undefined;
     replayButton: ValidateButton | undefined;
     queueSizeText: any;
     receiptLogText: any;
@@ -44,26 +43,24 @@ export default class LobbyUI {
     }
 
     initQueueButton() {
-        this.queueForGameButton = new JoinLobbyButton((button) => {
+        this.queueAsSignedActorButton = new JoinLobbyButton('Queue as Signed Actor', (button) => {
             // todo connect with metamask
             const wallet = new WriteWallet(iWeb3.createWallet())
+            //const wallet = new MetamaskWriteWallet()
+            console.info('new wallet', wallet.getAddress())
             main.playerController?.queueAsSignedActor(wallet);
+        });
+        this.queueAsOwnerButton = new JoinLobbyButton('Queue as Owner', (button) => {
+            // todo connect with metamask
+            const wallet = new WriteWallet(iWeb3.createWallet())
+            //const wallet = new MetamaskWriteWallet()
+            console.info('new wallet', wallet.getAddress())
+            main.playerController?.queueAsOwner(wallet);
         });
     }
 
     initSignButtons() {
-        this.signWalletTeamRed = new SignWalletButton('Red', (button) => {
-            
-        });
-        this.signWalletTeamRed.toggleVisibility(false);
-        this.signWalletTeamBlue = new SignWalletButton('Blue', (button) => {
-            
-        });
-        this.signWalletTeamBlue.toggleVisibility(false);
         main.playerController?.onGameReadyCallbacks.push((gameController: GameController) => {
-            this.queueForGameButton?.toggleVisibility(false);
-            this.signWalletTeamRed?.toggleVisibility(true);
-            this.signWalletTeamBlue?.toggleVisibility(true);
         })
     }
 

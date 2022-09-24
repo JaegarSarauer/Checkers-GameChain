@@ -15,7 +15,6 @@ export default class MoveReceiptItem extends ReceiptItem {
     }
 
     execute(controller: Controller): void {
-        // TODO fix access
         const game = controller.game.game as GameState;
         const piece = game.board?.getPieceById(this.pieceId);
         console.info('maino', game, piece)

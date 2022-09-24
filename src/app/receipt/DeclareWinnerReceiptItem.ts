@@ -25,10 +25,4 @@ export default class DeclareWinnerReceiptItem extends ReceiptItem {
         const {winningTeam} = params;
         return new DeclareWinnerReceiptItem(winningTeam);
     }
-
-    // getBuilder(): (params: {[param: string]: any}) => ReceiptItem {
-    //     return ({winningTeam}) => {
-    //         return new DeclareWinnerReceiptItem(winningTeam);
-    //     };
-    // }
 }
