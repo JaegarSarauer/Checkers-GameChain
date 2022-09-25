@@ -1,7 +1,6 @@
 import Button from "./Button";
 
 export default class JoinLobbyButton extends Button {
-    button: any;
 
     constructor(label: string, onClick: (button: JoinLobbyButton)=>void) {
         super();

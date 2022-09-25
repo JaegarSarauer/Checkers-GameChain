@@ -1,12 +1,11 @@
 import Button from './Button';
 import * as ethUtil from 'ethereumjs-util';
 import * as sigUtil from '@metamask/eth-sig-util';
-import { iWeb3 } from '@cajarty/gamechain';
+import { getWindow, iWeb3 } from '@cajarty/gamechain';
 import { Team } from '../../game/GameState';
 import main from '../../../main';
 
 export default class SignWalletButton extends Button {
-    button: any;
     team: Team;
 
     constructor(team: Team, onClick: (button: SignWalletButton) => void) {
@@ -104,14 +103,14 @@ export default class SignWalletButton extends Button {
             },
         });
 
-        var from = await window.web3.eth.getAccounts();
+        var from = await getWindow.web3.eth.getAccounts();
 
         console.info('from', from);
 
         var params = [from[0], msgParams];
         var method = 'eth_signTypedData_v4';
 
-        window.web3.currentProvider.sendAsync(
+        getWindow.web3.currentProvider.sendAsync(
             {
                 method,
                 params,

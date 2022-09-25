@@ -1,7 +1,6 @@
 import Button from './Button';
 
 export default class LoadReceiptButton extends Button {
-    button: any;
 
     constructor(onClick: (button: LoadReceiptButton) => void) {
         super();
